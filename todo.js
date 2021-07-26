@@ -9,6 +9,9 @@ let removeItem = (item) =>
 {
    // first delet from array of task use method 
    // remove child from tree dom use removechild 
+   let z = item.parentNode;
+   z.parentNode.removeChild(z);
+   
 }
 
 // state done , not done , expire => detemine how mush expire in 
@@ -54,16 +57,16 @@ let AddTask = (str,x) =>
            year:parseInt(y[0])
        }
    }
-   let newli = document.createElement("LI")
+   let newli = document.createElement("LI");
+   let DIV1 = document.createElement("DIV");
+   let btn = document.createElement("BUTTON");
    AllTask.appendChild(newli);
-   let DIV1 = document.createElement("DIV")
    DIV1.id = newTask.id;
-  newli.appendChild(DIV1);
-   
+   newli.appendChild(DIV1);
    DIV1.appendChild(document.createElement("INPUT")).setAttribute("type","checkbox");
    DIV1.appendChild(document.createElement("LABEL")).innerText = newTask.task;
-   newli.appendChild(document.createElement("I")).className = "fa fa-trash";
-
+   newli.appendChild(btn)   
+   btn.appendChild(document.createElement("I")).className = "fa fa-trash";
    toDoList.push(newTask);
    
 
@@ -75,6 +78,6 @@ add_Item.addEventListener("click",()=>AddTask(text,date_expire));
 const check = document.querySelectorAll('input[name="task"]');
 console.log(check)
 check.forEach(item =>item.addEventListener("change",(evt)=>{endTask(item,evt)}));
-//check.addEventListener("change",(evt)=>console.log(evt.target.value));
 
-// if checked checkbox must 
+const del_task = document.querySelectorAll('button');
+del_task.forEach(item => item.addEventListener('click',()=>{removeItem(item)}))
