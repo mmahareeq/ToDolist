@@ -19,10 +19,23 @@ let ExpireIn = () =>
     // calculate 
 }
 //change style 
-let endTask= (i) =>
-{
-    let z =  document.querySelector(`li #${i}`);
-    console.log(z);
+let endTask= (i,event) =>
+
+{   
+    let z =  document.querySelector(` #${i.id}`);
+    let P = z.parentNode;
+    let g  = P.parentNode;
+    if(document.querySelector(` #${i.id}`).checked)
+    {
+       P.setAttribute('style','text-decoration:line-through;opacity:0.6;');
+       g.setAttribute('style','background:rgb(187, 183, 183);')
+    } 
+    else
+    {
+       P.removeAttribute('style');
+       g.removeAttribute('style')
+    }
+
 
 }
 // add new task to list 
@@ -44,6 +57,7 @@ let AddTask = (str,x) =>
    let newli = document.createElement("LI")
    AllTask.appendChild(newli);
    let DIV1 = document.createElement("DIV")
+   DIV1.id = newTask.id;
   newli.appendChild(DIV1);
    
    DIV1.appendChild(document.createElement("INPUT")).setAttribute("type","checkbox");
@@ -60,7 +74,7 @@ const text = document.querySelector("#task")
 add_Item.addEventListener("click",()=>AddTask(text,date_expire));
 const check = document.querySelectorAll('input[name="task"]');
 console.log(check)
-check.forEach(item =>item.addEventListener("change",()=>{endTask(item.id)}));
+check.forEach(item =>item.addEventListener("change",(evt)=>{endTask(item,evt)}));
 //check.addEventListener("change",(evt)=>console.log(evt.target.value));
 
 // if checked checkbox must 
