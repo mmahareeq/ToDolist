@@ -4,22 +4,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://use.fontawesome.com/23bea62652.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="ToDo.css">
     <title>Document</title>
 </head>
 <body>
     <section>
         <div class="addtodo-1">
-            <h3>JavaScript Lesson 1 Core 3 </h3>
+            <h3>To-Do-List </h3>
+            <p></p>
             <div class="addtodo">
-                <input type="text" placeholder="Add to do">
-                <input type="button" value="ADD">
+                <input type="text" placeholder="Write a new task " id="task">
+                <input type="button" id="addtask" value="Add to list">
+            </div>
+            <div class="expirein">
+                <label for="expire"> Expire in :</label>
+                <input type="date" id="expire" >
             </div>
          </div>
 
-        <ul>
-            <li></li>
+        <ul  class="list">
+            <li>
+               <div id ="">
+                   <input type="checkbox" id="l1" name="task"  ><label for="l1"> JavaScript</label>
+                </div>
+
+                 <i class="fa fa-trash" aria-hidden="true"></i>
+            </li>
+            <li>
+                <div>
+                    <input type="checkbox" id="l2" name="task"><label for="l2"> JavaScript</label>
+                </div>
+                <i class="fa fa-trash" aria-hidden="true"></i>
+        
+            </li>
         </ul>
     </section>
+
+    <script src="todo.js"></script>
 </body>
 </html>
