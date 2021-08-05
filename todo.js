@@ -1,105 +1,24 @@
-let toDoList=[
-    
-];
-let content = 0 ; 
-// toDoList = [ {id:1, task:"",expirein:},]
 let date_now = new Date();
-let month = date_now.getMonth()+1;
-let year = date_now.getFullYear();
-let day = date_now.getDate();
-const empty = document.querySelector("#empty")
+
+let empty = document.querySelector("#empty")
 const add_Item = document.querySelector("#addtask");
 const date_expire = document.querySelector("#expire");
 const text = document.querySelector("#task")
-// remove task from list 
-let removeItem = (evt) =>
-{
-   // first delet from array of task use method 
-   // remove child from tree dom use removechild 
-   //console.log(evt.target.className);
-   
-   if(evt.target.className === 'fa fa-trash')
-     {  
-        // console.log(evt.path[2]);
-         evt.path[3].removeChild(evt.path[2]);
-     }
-    
-   
-}
-
-// state done , not done , expire => detemine how mush expire in 
-//each one min is calling 
-
-let ExpireIn = (item) => 
-{
-    // calculate 
-    if(item.expirein.year ==year && item.expirein.month == month)
-        {
-            if(item.expirein.day == day)
-            { 
-                return "Expires in "+ 0 + "days";
-            }else if(item.expirein.day>day)
-            {
-                content= item.expirein.day - day ;
-                return "Expires in "+ content + "days";
-    
-            }
-            else
-            {
-                content = day - item.expirein.day ;
-                return "Expired "+ content + "days ago";
-            }
-        }
-}
-//change style 
-let endTask= (evt) =>
-
+const url ="https://610990bad71b6700176399bd.mockapi.io/todos";
+let toDoList=[];
+//add new task to list 
+let AddTask = (data) =>
 {   
-    let z = evt.path[1];
-    let P = z.parentNode;
-    if(evt.target.checked)
-    {
-        console.log(evt);
-        evt.path[1].setAttribute('style','text-decoration:line-through;opacity:0.6;');
-        let z = evt.path[1];
-        let P = z.parentNode;
-        
-        P.setAttribute('style','background:#F4F9F9;')
-        
-    }
-    else
-    {
-       z.removeAttribute('style');
-       P.removeAttribute('style')
-    }
-
-}
-// reset input 
-let reset = ()=>{
-     document.querySelector('input[type="text"]').value='';
-     document.querySelector('input[type="date"]').value='';
-      
-  
-  }
-// add new task to list 
-let AddTask = (str,x) =>
-{ 
-    let y = x.value.split("-");
+    data.forEach( (item)=>{
+   
     let AllTask = document.querySelector(".list")
-    if(str.value === '' || x.value === undefined){ return window.alert("You must enter the task and the expiration date ")}
-    empty.removeChild(document.getElementsByTagName("h2")[0]);
-   const newTask = {
-       id:Math.random(),
-       task:str.value,
-       expirein:{
-           day:parseInt(y[2]),
-           month:parseInt(y[1]),
-           year:parseInt(y[0])
-       },
-       EX:0
-   }
-   let result  = ExpireIn(newTask);
-   newTask.EX= content;
+    if(item.title === '' ){ return window.alert("You must enter the task and the expiration date ")}
+     const newTask = {
+       id:item.id,
+       task:item.title,
+       complete:item.completed,
+    }
+   
    let newli = document.createElement("LI");
    let DIV1 = document.createElement("DIV");
    let btn = document.createElement('BUTTON');
@@ -108,15 +27,85 @@ let AddTask = (str,x) =>
    newli.appendChild(DIV1);
    DIV1.appendChild(document.createElement("INPUT")).setAttribute("type","checkbox");
    DIV1.appendChild(document.createElement("LABEL")).innerText = newTask.task;
-   DIV1.appendChild(document.createElement("SPAN")).innerText = result;
+   DIV1.appendChild(document.createElement("SPAN")).innerText = newTask.complete?'completed' : "Not Completed";
    newli.appendChild(btn) 
   
    btn.appendChild(document.createElement("I")).className = "fa fa-trash";
    toDoList.push(newTask);
    reset();
-
+    })
 }
 
+const fetchtoDo  = async(url)=>
+{
+    const response = await fetch(`${url}`)
+    const data =await response.json();
+    empty.removeChild(document.getElementsByTagName("h2")[0])
+    
+    
+    AddTask(data);
+}
+fetchtoDo(url);
+
+// remove task from list 
+let removeItem = (evt) =>
+{
+   // first delet from array of task use method 
+   // remove child from tree dom use removechild 
+   //console.log(evt.target.className);
+   
+   if(evt.target.className === 'fa fa-trash')
+     {   
+         evt.path[3].removeChild(evt.path[2]);
+
+         
+     }
+    
+   
+}
+
+//change style 
+let endTask= (evt) =>
+
+{   
+    let z = evt.path[1];
+    let P = z.parentNode;
+    let DIV = document.getElementById(z.id)
+    //let DIV2 = DIV.getElementsByTagName('SPAN')[0];
+    if(evt.target.checked)
+    {
+        
+        evt.path[1].setAttribute('style','text-decoration:line-through;opacity:0.6;');
+        let z = evt.path[1];
+        
+        let endTask = toDoList.find(x=>
+            {if(x.id===z.id)
+                {
+                    x.complete=true;
+                    DIV2.innerText=  "Completed";
+                   // console.log(DIV2);
+                  
+                
+                }}
+            ); 
+        let P = z.parentNode;
+        P.setAttribute('style','background:#F4F9F9;')
+        
+    }
+    else
+    {
+       z.removeAttribute('style');
+       P.removeAttribute('style');
+       //DIV2.innerText=  "Not Completed";
+    }
+
+}
+// reset input 
+let reset = ()=>{
+     document.querySelectorAll('input[type="text"]')[0].value='';
+     
+     
+}
 
 
 if(toDoList.length== 0)
@@ -125,27 +114,24 @@ if(toDoList.length== 0)
 
 }
 
-add_Item.addEventListener("click",()=>AddTask(text,date_expire));
+add_Item.addEventListener("click",async(e)=>{
+    e.preventDefault();
+
+    const response = await fetch(url,{method:'POST',
+                                 headers:{'Content-Type':'application/json'}
+                                ,body:JSON.stringify({title:text.value,completed:false,id:Math.random()})})
+    const data =await response.json();
+     //ddTask(data);
+     console.log(data);
+     const dataArr= [] ;
+     dataArr.push(data);
+     AddTask(dataArr);
+
+});
 
 document.addEventListener("change",(evt)=>{endTask(evt)});
-
 document.addEventListener('click',(event)=>{removeItem(event );})
 //removeItem(item)
-setInterval(function(){
-    if(toDoList.length != 0 ){
-      toDoList.forEach(item => {
-        let span_p = document.getElementById(`${item.id}`);
-        let change_content = span_p.parentNode;
-        ExpireIn(item);
-        
-        item.EX = content;
-        
-      
-        
-        
-    }
-    
-    )}
-},60*1000);
+
 
 
