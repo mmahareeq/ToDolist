@@ -71,7 +71,7 @@ let endTask= (evt) =>
     let z = evt.path[1];
     let P = z.parentNode;
     let DIV = document.getElementById(z.id)
-    //let DIV2 = DIV.getElementsByTagName('SPAN')[0];
+    let DIV2 = DIV.getElementsByTagName('SPAN')[0];
     if(evt.target.checked)
     {
         
@@ -83,7 +83,7 @@ let endTask= (evt) =>
                 {
                     x.complete=true;
                     DIV2.innerText=  "Completed";
-                   // console.log(DIV2);
+                    console.log(DIV2);
                   
                 
                 }}
@@ -96,7 +96,7 @@ let endTask= (evt) =>
     {
        z.removeAttribute('style');
        P.removeAttribute('style');
-       //DIV2.innerText=  "Not Completed";
+       DIV2.innerText=  "Not Completed";
     }
 
 }
